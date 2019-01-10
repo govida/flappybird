@@ -92,7 +92,6 @@ class Brain:
         X = np.zeros((len(mini_batch), 80, 80, 1))
         y = np.zeros((len(mini_batch), 2))
         # replay experience
-        weights = []
         for i in range(0, len(mini_batch)):
             memory_state = mini_batch[i][0]
             action_index = np.argmax(mini_batch[i][1])
@@ -105,12 +104,10 @@ class Brain:
             else:
                 Q = self.model.predict(next_memory_state)
                 y[i, action_index] = reward + self.gamma * np.max(Q)
-            weights.append(abs(y[i, action_index]))
 
-        loss = self.model.train_on_batch(X, y, weights)
+        loss = self.model.train_on_batch(X, y)
 
         if self.step % 100 == 0:
-            print(self.step, loss)
             self.model.save(self.model_path)
 
 

@@ -11,18 +11,18 @@ import random
 
 class Brain:
     def __init__(self):
-        self.epsilon_init = 0.5  # epsilon 的 init
+        self.epsilon_init = 0.2  # epsilon 的 init
         self.epsilon_min = 0.0001  # epsilon 的 MIN
         self.epsilon = self.epsilon_init  # epsilon 代表采取随机行为的阈值
-        self.epsilon_decay_step = 30000  # epsilon 衰减的总步数
-        self.observation_step = 3000  # 观察多少步后，开始降低随机性
-        self.memory_size = 10000  # 记忆容量
+        self.epsilon_decay_step = 300000  # epsilon 衰减的总步数
+        self.observation_step = 50000  # 观察多少步后，开始降低随机性
+        self.memory_size = 50000  # 记忆容量
         self.gamma = 0.99  # 未来奖励 折扣系数
         self.memory = deque()
         self.batch_size = 64
         self.model_path = '../resources/model/cnn+.model'
         self.step = 0  # 当前训练到第几步
-        self.new_random_step = self.epsilon_decay_step*2
+        self.new_random_step = self.epsilon_decay_step
         if os.path.exists(self.model_path):
             self.model = load_model(self.model_path)
         else:
@@ -87,8 +87,7 @@ class Brain:
         if self.step > self.new_random_step:
             print('new random epoch')
             self.step = 0
-            self.epsilon_init /= 2
-            self.epsilon = self.epsilon_init / 2
+            self.epsilon = self.epsilon_init
 
     def train_model(self):
         # 降低 epsilon，从而降低随机性
@@ -99,7 +98,6 @@ class Brain:
         X = np.zeros((len(mini_batch), 80, 80, 1))
         y = np.zeros((len(mini_batch), 2))
         # replay experience
-        weights = []
         for i in range(0, len(mini_batch)):
             memory_state = mini_batch[i][0]
             action_index = np.argmax(mini_batch[i][1])
@@ -112,12 +110,10 @@ class Brain:
             else:
                 Q = self.model.predict(next_memory_state)
                 y[i, action_index] = reward + self.gamma * np.max(Q)
-            weights.append(abs(y[i, action_index]))
 
-        loss = self.model.train_on_batch(X, y, weights)
+        loss = self.model.train_on_batch(X, y)
 
         if self.step % 100 == 0:
-            print(self.step, loss)
             self.model.save(self.model_path)
 
 
