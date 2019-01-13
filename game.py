@@ -90,14 +90,6 @@ class Game:
         self.computer_play = computer_play
         # 是否使用 启发式 reward
         self.use_extract_reward = use_extract_reward
-        # debug 模式
-        self.debug = True
-        # 轮数
-        self.epoch = 0
-        # 总分数
-        self.sum_score = 0.0
-        # 过去 100 轮 总分数
-        self.hundred_score = 0.0
         # 游戏开始
         self.__start()
 
@@ -120,7 +112,6 @@ class Game:
 
     # 开始游戏
     def __start(self):
-        self.epoch += 1
         self.score = 0
         self.bird_index = 0
 
@@ -275,18 +266,13 @@ class Game:
         is_crash = self.__check_crash({'x': self.bird_x, 'y': self.bird_y,
                                        'index': self.bird_index},
                                       self.upper_pipes, self.lower_pipes)
+        # 理论上不需要 final score，这里作为衡量模型收敛的参考数据，提供给外界
+        final_score = -1
         if is_crash:
             terminal = True
-            # 装到脑袋后，不好考虑其他 reward 的影响
+            # 装到脑袋后，不好考虑其他 reward 的影响，直接置为-1
             reward = -1
-            self.sum_score += self.score
-            self.hundred_score += self.score
-
-            if self.debug and self.epoch % 100 == 0:
-                print('第 %i 轮, sum avg score:' % self.epoch, self.sum_score / self.epoch)
-                print('第 %i 轮, past 100 avg score:' % self.epoch, self.hundred_score / 100)
-                print()
-                self.hundred_score = 0.0
+            final_score = self.score
             # 立刻重新开始
             self.__start()
 
@@ -307,7 +293,7 @@ class Game:
         image_data = pygame.surfarray.array3d(pygame.display.get_surface())
         pygame.display.update()
         self.fps_clock.tick(self.fps)
-        return image_data, reward, terminal
+        return image_data, reward, terminal, final_score
 
 
 if __name__ == '__main__':
@@ -321,6 +307,6 @@ if __name__ == '__main__':
                 pygame.quit()
                 sys.exit()
             if event.type == KEYDOWN and (event.key == K_SPACE or event.key == K_UP):
-                image_data, reward, terminal, _ = game.action_and_reward([0, 1])
+                image_data, reward, terminal, final_score = game.action_and_reward([0, 1])
             elif event.type == KEYDOWN and event.key == K_RIGHT:
-                image_data, reward, terminal, _ = game.action_and_reward([1, 0])
+                image_data, reward, terminal, final_score = game.action_and_reward([1, 0])

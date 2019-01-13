@@ -7,6 +7,7 @@ from game import Game
 import numpy as np
 import cv2
 import random
+import time
 
 
 class Brain:
@@ -20,17 +21,27 @@ class Brain:
         self.gamma = 0.99  # 未来奖励 折扣系数
         self.memory = deque()
         self.batch_size = 64
-        self.model_path = '../resources/model/cnn.model'
+        self.model_path = '../resources/model/cnn+.model'
         self.step = 0  # 训练到第几步
         if os.path.exists(self.model_path):
             self.model = load_model(self.model_path)
         else:
             self.model = self.build_model()
 
+        # 辅助信息
+        # 结束局=bird撞墙身亡
+        self.sum_score = 0  # 所有结束局的总分
+        self.past_100_sum_score = 0  # 最近100结束局的总分
+        self.end_game_size = 0  # 总共结束局数
+        self.start_time = time.time()
+        self.best_score = 0
+        self.max_past_100_sum_score = 0
+        self.best_model_path = '../resources/model/cnn+_best.model'  # 利用max_past_100_sum_score来选择最好的model
+
     def build_model(self):
         model = Sequential()
 
-        model.add(Conv2D(32, kernel_size=4, strides=(4, 4), input_shape=(80, 80, 1), activation='relu'))
+        model.add(Conv2D(32, kernel_size=4, strides=(4, 4), input_shape=(80, 80, 4), activation='relu'))
         model.add(MaxPooling2D(pool_size=(2, 2)))
 
         model.add(Conv2D(64, kernel_size=2, strides=(2, 2), activation='relu'))
@@ -46,19 +57,19 @@ class Brain:
         model.compile(loss='mse', optimizer='adam')
         return model
 
-    def image2state(self, image_data):
+    def image2frame(self, image_data):
         # 1.缩放（可以不用，考虑到资源有限还是缩放比较好）
         resize_image_data = cv2.resize(image_data, (80, 80))
         # 2.转化成灰色图片
         gray_image_data = cv2.cvtColor(resize_image_data, cv2.COLOR_BGR2GRAY)
         # 3.转化成二值图片（供神经网络训练用）
         _, binary_image_data = cv2.threshold(gray_image_data, 1, 1, cv2.THRESH_BINARY)
-        # 4.转成一个状态，可以直接用于训练
-        state = binary_image_data.reshape((1, 80, 80, 1))
-        return state
+        return binary_image_data
 
     def set_init_state(self, image_data):
-        self.current_state = self.image2state(image_data)
+        current_frame = self.image2frame(image_data)
+        # 堆叠4帧图像到同一（x,y）上
+        self.current_state = np.stack((current_frame, current_frame, current_frame, current_frame), axis=2)
 
     def get_action(self):
         action = np.zeros(2)
@@ -68,13 +79,19 @@ class Brain:
             action[action_index] = 1
         else:
             # 采取经验行为
-            result = self.model.predict(self.current_state)[0]
+            result = self.model.predict(self.current_state[np.newaxis, :, :, :])[0]
             action_index = np.argmax(result)
             action[action_index] = 1
         return action
 
-    def set_perception(self, action, image_data, reward, terminal):
-        next_state = self.image2state(image_data)
+    def set_perception(self, action, image_data, reward, terminal, final_score=None):
+        # 额外统计信息
+        self.extra(terminal, final_score)
+
+        # 取出当前一帧
+        next_frame = self.image2frame(image_data)
+        # 当前一帧做第一帧，后面三帧从原来取
+        next_state = np.append(np.reshape(next_frame, (80, 80, 1)), self.current_state[:, :, :3], axis=2)
         self.memory.append((self.current_state, action, next_state, reward, terminal))
         if len(self.memory) > self.memory_size:
             self.memory.popleft()
@@ -84,12 +101,12 @@ class Brain:
         self.step += 1
 
     def train_model(self):
-        # 降低 epsilon，从而降低随机性
+        # 逐步降低 epsilon，从而减少随机性
         if self.epsilon > self.epsilon_min:
             self.epsilon -= (self.epsilon_init - self.epsilon_min) / self.epsilon_decay_step
         # 可能 sample 不出 BATCH 个样本
         mini_batch = random.sample(self.memory, min(len(self.memory), self.batch_size))
-        X = np.zeros((len(mini_batch), 80, 80, 1))
+        X = np.zeros((len(mini_batch), 80, 80, 4))
         y = np.zeros((len(mini_batch), 2))
         # replay experience
         for i in range(0, len(mini_batch)):
@@ -102,13 +119,39 @@ class Brain:
             if terminal:
                 y[i, action_index] = reward
             else:
-                Q = self.model.predict(next_memory_state)
+                Q = self.model.predict(next_memory_state[np.newaxis, :, :, :])[0]
                 y[i, action_index] = reward + self.gamma * np.max(Q)
 
         loss = self.model.train_on_batch(X, y)
 
         if self.step % 100 == 0:
             self.model.save(self.model_path)
+
+    def extra(self, terminal, final_score):
+        def format_time(t):
+            return time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(t))
+
+        if terminal and final_score:
+            current_time = time.time()
+            if final_score > self.best_score:
+                self.best_score = final_score
+                print(format_time(current_time), current_time - self.start_time, self.step, "best score",
+                      self.best_score)
+            self.end_game_size += 1
+            self.sum_score += final_score
+            self.past_100_sum_score += final_score
+            if self.end_game_size % 100 == 0:
+                print(format_time(current_time), current_time - self.start_time, self.step, "total average score",
+                      1.0 * self.sum_score / self.end_game_size)
+                print(format_time(current_time), current_time - self.start_time, self.step, "past 100 average score",
+                      1.0 * self.past_100_sum_score / 100)
+                if self.past_100_sum_score > self.max_past_100_sum_score:
+                    self.max_past_100_sum_score = self.past_100_sum_score
+                    print(format_time(current_time), current_time - self.start_time, self.step,
+                          "max past 100 average score",
+                          1.0 * self.max_past_100_sum_score / 100)
+                    self.model.save(self.best_model_path)
+                self.past_100_sum_score = 0
 
 
 def play_bird():
@@ -121,14 +164,14 @@ def play_bird():
     # 3. 玩游戏！
     # 3.1. 初始化状态
     action = np.array([1, 0])
-    image_data, reward, terminal = game.action_and_reward(action)
+    image_data, reward, terminal, final_score = game.action_and_reward(action)
     brain.set_init_state(image_data)
 
     # 3.2 开始玩
     while True:
         action = brain.get_action()
-        image_data, reward, terminal = game.action_and_reward(action)
-        brain.set_perception(action, image_data, reward, terminal)
+        image_data, reward, terminal, final_score = game.action_and_reward(action)
+        brain.set_perception(action, image_data, reward, terminal, final_score)
 
 
 if __name__ == '__main__':
