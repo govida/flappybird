@@ -161,7 +161,7 @@ def play_bird():
     # 2. 创建游戏
     # use_extract_reward=False => cnn 原始 model
     # use_extract_reward=True => cnn+ 引入额外reward
-    game = Game()
+    game = Game(use_extract_reward=True)
 
     # 3. 玩游戏！
     # 3.1. 初始化状态
