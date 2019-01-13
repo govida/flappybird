@@ -250,7 +250,7 @@ class Game:
 
         # 计算reward
         terminal = False
-        reward = 0
+        reward = 0.1
         if self.use_extract_reward:
             reward = self.__get_extra_reward()
 

@@ -21,7 +21,7 @@ class Brain:
         self.gamma = 0.99  # 未来奖励 折扣系数
         self.memory = deque()
         self.batch_size = 64
-        self.model_path = '../resources/model/cnn+.model'
+        self.model_path = 'resources/model/cnn+.model'
         self.step = 0  # 训练到第几步
         if os.path.exists(self.model_path):
             self.model = load_model(self.model_path)
@@ -36,7 +36,7 @@ class Brain:
         self.start_time = time.time()
         self.best_score = 0
         self.max_past_100_sum_score = 0
-        self.best_model_path = '../resources/model/cnn+_best.model'  # 利用max_past_100_sum_score来选择最好的model
+        self.best_model_path = 'resources/model/cnn+_best.model'  # 利用max_past_100_sum_score来选择最好的model
 
     def build_model(self):
         model = Sequential()
@@ -159,6 +159,8 @@ def play_bird():
     brain = Brain()
 
     # 2. 创建游戏
+    # use_extract_reward=False => cnn 原始 model
+    # use_extract_reward=True => cnn+ 引入额外reward
     game = Game()
 
     # 3. 玩游戏！
