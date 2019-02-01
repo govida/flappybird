@@ -20,8 +20,8 @@ class Brain:
         self.memory_size = 50000  # 记忆容量
         self.gamma = 0.99  # 未来奖励 折扣系数
         self.memory = deque()
-        self.batch_size = 64
-        self.model_path = 'resources/model/cnn+.model'
+        self.batch_size = 32
+        self.model_path = 'resources/model/cnn.model'
         self.step = 0  # 训练到第几步
         if os.path.exists(self.model_path):
             self.model = load_model(self.model_path)
@@ -36,7 +36,7 @@ class Brain:
         self.start_time = time.time()
         self.best_score = 0
         self.max_past_100_sum_score = 0
-        self.best_model_path = 'resources/model/cnn+_best.model'  # 利用max_past_100_sum_score来选择最好的model
+        self.best_model_path = 'resources/model/cnn_best.model'  # 利用max_past_100_sum_score来选择最好的model
 
     def build_model(self):
         model = Sequential()
@@ -50,7 +50,7 @@ class Brain:
         model.add(Flatten())
 
         model.add(Dense(256, activation='relu'))
-        model.add(Dropout(0.2))
+        # model.add(Dropout(0.2))
         model.add(Dense(2, activation='linear'))
         model.summary()
 
@@ -84,7 +84,7 @@ class Brain:
             action[action_index] = 1
         return action
 
-    def set_perception(self, action, image_data, reward, terminal, final_score=None):
+    def set_perception(self, action, image_data, reward, terminal, final_score):
         # 额外统计信息
         self.extra(terminal, final_score)
 
@@ -131,7 +131,7 @@ class Brain:
         def format_time(t):
             return time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(t))
 
-        if terminal and final_score:
+        if terminal and final_score is not None:
             current_time = time.time()
             if final_score > self.best_score:
                 self.best_score = final_score
@@ -161,7 +161,7 @@ def play_bird():
     # 2. 创建游戏
     # use_extract_reward=False => cnn 原始 model
     # use_extract_reward=True => cnn+ 引入额外reward
-    game = Game(use_extract_reward=True)
+    game = Game(use_extract_reward=False)
 
     # 3. 玩游戏！
     # 3.1. 初始化状态

@@ -267,7 +267,7 @@ class Game:
                                        'index': self.bird_index},
                                       self.upper_pipes, self.lower_pipes)
         # 理论上不需要 final score，这里作为衡量模型收敛的参考数据，提供给外界
-        final_score = -1
+        final_score = None
         if is_crash:
             terminal = True
             # 装到脑袋后，不好考虑其他 reward 的影响，直接置为-1
