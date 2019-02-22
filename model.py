@@ -1,5 +1,5 @@
 from keras.models import Sequential
-from keras.layers import Conv2D, MaxPooling2D, Flatten, Dense, Dropout
+from keras.layers import Conv2D, MaxPooling2D, Flatten, Dense
 from keras.models import load_model
 from collections import deque
 import os
@@ -11,8 +11,9 @@ import time
 
 
 class Brain:
-    def __init__(self):
-        self.epsilon_init = 0.1  # epsilon 的 init
+    def __init__(self, cnn_plus):
+        self.cnn_plus = cnn_plus
+        self.epsilon_init = 0.01  # epsilon 的 init
         self.epsilon_min = 0.0001  # epsilon 的 MIN
         self.epsilon = self.epsilon_init  # epsilon 代表采取随机行为的阈值
         self.epsilon_decay_step = 300000  # epsilon 衰减的总步数
@@ -21,7 +22,10 @@ class Brain:
         self.gamma = 0.99  # 未来奖励 折扣系数
         self.memory = deque()
         self.batch_size = 32
-        self.model_path = 'resources/model/cnn.model'
+        if self.cnn_plus:
+            self.model_path = 'resources/model/cnn+.model'
+        else:
+            self.model_path = 'resources/model/cnn.model'
         self.step = 0  # 训练到第几步
         if os.path.exists(self.model_path):
             self.model = load_model(self.model_path)
@@ -30,13 +34,7 @@ class Brain:
 
         # 辅助信息
         # 结束局=bird撞墙身亡
-        self.sum_score = 0  # 所有结束局的总分
-        self.past_100_sum_score = 0  # 最近100结束局的总分
-        self.end_game_size = 0  # 总共结束局数
-        self.start_time = time.time()
         self.best_score = 0
-        self.max_past_100_sum_score = 0
-        self.best_model_path = 'resources/model/cnn_best.model'  # 利用max_past_100_sum_score来选择最好的model
 
     def build_model(self):
         model = Sequential()
@@ -50,7 +48,7 @@ class Brain:
         model.add(Flatten())
 
         model.add(Dense(256, activation='relu'))
-        # model.add(Dropout(0.2))
+
         model.add(Dense(2, activation='linear'))
         model.summary()
 
@@ -130,40 +128,21 @@ class Brain:
     def extra(self, terminal, final_score):
         def format_time(t):
             return time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(t))
-
         if terminal and final_score is not None:
-            current_time = time.time()
             if final_score > self.best_score:
                 self.best_score = final_score
-                print(format_time(current_time), current_time - self.start_time, self.step, "best score",
-                      self.best_score)
-            self.end_game_size += 1
-            self.sum_score += final_score
-            self.past_100_sum_score += final_score
-            if self.end_game_size % 100 == 0:
-                print(format_time(current_time), current_time - self.start_time, self.step, "total average score",
-                      1.0 * self.sum_score / self.end_game_size)
-                print(format_time(current_time), current_time - self.start_time, self.step, "past 100 average score",
-                      1.0 * self.past_100_sum_score / 100)
-                if self.past_100_sum_score > self.max_past_100_sum_score:
-                    self.max_past_100_sum_score = self.past_100_sum_score
-                    print(format_time(current_time), current_time - self.start_time, self.step,
-                          "max past 100 average score",
-                          1.0 * self.max_past_100_sum_score / 100)
-                    self.model.save(self.best_model_path)
-                self.past_100_sum_score = 0
+                print(format_time(time.time()), self.step, "best score", self.best_score)
 
 
-def play_bird():
+
+def play_bird(cnn_plus):
     # 1. 实例化 brain
-    brain = Brain()
+    brain = Brain(cnn_plus)
 
     # 2. 创建游戏
-    # use_extract_reward=False => cnn 原始 model
-    # use_extract_reward=True => cnn+ 引入额外reward
-    game = Game(use_extract_reward=False)
+    game = Game(use_extract_reward=cnn_plus)
 
-    # 3. 玩游戏！
+    # 3. 玩游戏
     # 3.1. 初始化状态
     action = np.array([1, 0])
     image_data, reward, terminal, final_score = game.action_and_reward(action)
@@ -177,4 +156,5 @@ def play_bird():
 
 
 if __name__ == '__main__':
-    play_bird()
+    cnn_plus = True
+    play_bird(cnn_plus)

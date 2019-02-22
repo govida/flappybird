@@ -1,0 +1,188 @@
+/Library/Frameworks/Python.framework/Versions/3.6/bin/python3.6 /Users/sola/PycharmProjects/flappybird/model.py
+Using TensorFlow backend.
+pygame 1.9.4
+Hello from the pygame community. https://www.pygame.org/contribute.html
+_________________________________________________________________
+Layer (type)                 Output Shape              Param #
+=================================================================
+conv2d_1 (Conv2D)            (None, 20, 20, 32)        2080
+_________________________________________________________________
+max_pooling2d_1 (MaxPooling2 (None, 10, 10, 32)        0
+_________________________________________________________________
+conv2d_2 (Conv2D)            (None, 5, 5, 64)          8256
+_________________________________________________________________
+max_pooling2d_2 (MaxPooling2 (None, 2, 2, 64)          0
+_________________________________________________________________
+flatten_1 (Flatten)          (None, 256)               0
+_________________________________________________________________
+dense_1 (Dense)              (None, 256)               65792
+_________________________________________________________________
+dense_2 (Dense)              (None, 2)                 514
+=================================================================
+Total params: 76,642
+Trainable params: 76,642
+Non-trainable params: 0
+_________________________________________________________________
+libpng warning: iCCP: known incorrect sRGB profile
+libpng warning: iCCP: known incorrect sRGB profile
+libpng warning: iCCP: known incorrect sRGB profile
+libpng warning: iCCP: known incorrect sRGB profile
+libpng warning: iCCP: known incorrect sRGB profile
+2019-02-08 09:44:38.398396: I tensorflow/core/platform/cpu_feature_guard.cc:137] Your CPU supports instructions that this TensorFlow binary was not compiled to use: SSE4.2 AVX AVX2 FMA
+2019-02-08 09:46:43 3584 total average score 0.0
+2019-02-08 09:46:43 3584 past 100 average score 0.0
+2019-02-08 09:48:44 7145 total average score 0.0
+2019-02-08 09:48:44 7145 past 100 average score 0.0
+2019-02-08 09:50:54 10722 total average score 0.0
+2019-02-08 09:50:54 10722 past 100 average score 0.0
+2019-02-08 09:52:58 14253 total average score 0.0
+2019-02-08 09:52:58 14253 past 100 average score 0.0
+2019-02-08 09:55:08 17813 total average score 0.0
+2019-02-08 09:55:08 17813 past 100 average score 0.0
+2019-02-08 09:57:10 21356 total average score 0.0
+2019-02-08 09:57:10 21356 past 100 average score 0.0
+2019-02-08 09:59:13 24897 total average score 0.0
+2019-02-08 09:59:13 24897 past 100 average score 0.0
+2019-02-08 10:01:20 28437 total average score 0.0
+2019-02-08 10:01:20 28437 past 100 average score 0.0
+2019-02-08 10:03:23 31981 total average score 0.0
+2019-02-08 10:03:23 31981 past 100 average score 0.0
+2019-02-08 10:05:22 35544 total average score 0.0
+2019-02-08 10:05:22 35544 past 100 average score 0.0
+2019-02-08 10:07:21 39122 total average score 0.0
+2019-02-08 10:07:21 39122 past 100 average score 0.0
+2019-02-08 10:09:22 42714 total average score 0.0
+2019-02-08 10:09:22 42714 past 100 average score 0.0
+2019-02-08 10:11:19 46216 total average score 0.0
+2019-02-08 10:11:19 46216 past 100 average score 0.0
+2019-02-08 10:13:19 49801 total average score 0.0
+2019-02-08 10:13:19 49801 past 100 average score 0.0
+2019-02-08 10:14:00 50533 best score 1
+2019-02-08 10:18:07 54542 total average score 0.0026666666666666666
+2019-02-08 10:18:07 54542 past 100 average score 0.04
+2019-02-08 10:22:42 59030 total average score 0.0025
+2019-02-08 10:22:42 59030 past 100 average score 0.04
+2019-02-08 10:27:28 63702 total average score 0.0035294117647058825
+2019-02-08 10:27:28 63702 past 100 average score 0.06
+2019-02-08 10:32:59 68821 total average score 0.011666666666666667
+2019-02-08 10:32:59 68821 past 100 average score 0.21
+2019-02-08 10:37:21 72704 best score 2
+2019-02-08 10:38:43 73894 total average score 0.018947368421052633
+2019-02-08 10:38:43 73894 past 100 average score 0.36
+2019-02-08 10:44:17 78970 total average score 0.023
+2019-02-08 10:44:17 78970 past 100 average score 0.46
+2019-02-08 10:50:04 84465 total average score 0.03428571428571429
+2019-02-08 10:50:04 84465 past 100 average score 0.72
+2019-02-08 10:55:22 89644 total average score 0.04090909090909091
+2019-02-08 10:55:22 89644 past 100 average score 0.9
+2019-02-08 11:00:52 95007 total average score 0.049130434782608694
+2019-02-08 11:00:52 95007 past 100 average score 1.13
+2019-02-08 11:06:16 100285 best score 4
+2019-02-08 11:06:41 100709 total average score 0.0575
+2019-02-08 11:06:41 100709 past 100 average score 1.38
+2019-02-08 11:12:14 106246 total average score 0.0632
+2019-02-08 11:12:14 106246 past 100 average score 1.58
+2019-02-08 11:18:21 112356 total average score 0.07692307692307693
+2019-02-08 11:18:21 112356 past 100 average score 2.0
+2019-02-08 11:24:31 118367 total average score 0.0874074074074074
+2019-02-08 11:24:31 118367 past 100 average score 2.36
+2019-02-08 11:31:01 124725 total average score 0.10107142857142858
+2019-02-08 11:31:01 124725 past 100 average score 2.83
+2019-02-08 11:37:35 131113 total average score 0.11379310344827587
+2019-02-08 11:37:35 131113 past 100 average score 3.3
+2019-02-08 11:44:17 137726 total average score 0.129
+2019-02-08 11:44:17 137726 past 100 average score 3.87
+2019-02-08 11:45:00 138444 best score 5
+2019-02-08 11:51:15 144665 total average score 0.1461290322580645
+2019-02-08 11:51:15 144665 past 100 average score 4.53
+2019-02-08 11:58:13 151600 total average score 0.164375
+2019-02-08 11:58:13 151600 past 100 average score 5.26
+2019-02-08 12:05:28 158792 total average score 0.1812121212121212
+2019-02-08 12:05:28 158792 past 100 average score 5.98
+2019-02-08 12:13:02 166330 total average score 0.19941176470588234
+2019-02-08 12:13:02 166330 past 100 average score 6.78
+2019-02-08 12:20:31 173770 total average score 0.21742857142857142
+2019-02-08 12:20:31 173770 past 100 average score 7.61
+2019-02-08 12:22:14 175461 best score 8
+2019-02-08 12:29:34 182732 total average score 0.2461111111111111
+2019-02-08 12:29:34 182732 past 100 average score 8.86
+2019-02-08 12:38:22 191455 total average score 0.2710810810810811
+2019-02-08 12:38:22 191455 past 100 average score 10.03
+2019-02-08 12:39:04 192153 best score 13
+2019-02-08 12:47:34 200590 total average score 0.29736842105263156
+2019-02-08 12:47:34 200590 past 100 average score 11.3
+2019-02-08 12:56:46 209721 total average score 0.3217948717948718
+2019-02-08 12:56:46 209721 past 100 average score 12.55
+2019-02-08 13:05:45 218627 total average score 0.3445
+2019-02-08 13:05:45 218627 past 100 average score 13.78
+2019-02-08 13:15:28 228272 total average score 0.3702439024390244
+2019-02-08 13:15:28 228272 past 100 average score 15.18
+2019-02-08 13:25:42 238418 total average score 0.3980952380952381
+2019-02-08 13:25:42 238418 past 100 average score 16.72
+2019-02-08 13:39:27 252050 total average score 0.4493023255813953
+2019-02-08 13:39:27 252050 past 100 average score 19.32
+2019-02-08 13:51:04 263635 total average score 0.48318181818181816
+2019-02-08 13:51:04 263635 past 100 average score 21.26
+2019-02-08 13:53:57 266513 best score 14
+2019-02-08 13:59:17 271822 best score 16
+2019-02-08 14:05:12 277721 total average score 0.5306666666666666
+2019-02-08 14:05:12 277721 past 100 average score 23.88
+2019-02-08 14:20:52 293334 total average score 0.5854347826086956
+2019-02-08 14:20:52 293334 past 100 average score 26.93
+2019-02-08 14:24:20 296788 best score 19
+2019-02-08 14:37:50 310243 total average score 0.6436170212765957
+2019-02-08 14:37:50 310243 past 100 average score 30.25
+2019-02-08 14:56:48 329140 total average score 0.7125
+2019-02-08 14:56:48 329140 past 100 average score 34.2
+2019-02-08 15:04:55 337193 best score 21
+2019-02-08 15:07:15 339493 best score 23
+2019-02-08 15:18:40 350799 best score 31
+2019-02-08 15:22:53 354963 total average score 0.8171428571428572
+2019-02-08 15:22:53 354963 past 100 average score 40.04
+2019-02-08 15:36:56 368887 best score 46
+2019-02-08 15:55:53 387747 total average score 0.9554
+2019-02-08 15:55:53 387747 past 100 average score 47.77
+2019-02-08 16:12:32 404323 best score 50
+2019-02-08 16:30:07 421820 total average score 1.0935294117647059
+2019-02-08 16:30:07 421820 past 100 average score 55.77
+2019-02-08 16:40:08 431780 best score 52
+2019-02-08 16:49:30 441102 best score 53
+2019-02-08 17:20:30 468724 total average score 1.2932692307692308
+2019-02-08 17:20:30 468724 past 100 average score 67.25
+2019-02-08 17:37:57 482871 best score 59
+2019-02-08 18:16:15 516439 total average score 1.490377358490566
+2019-02-08 18:16:15 516439 past 100 average score 78.99
+2019-02-08 18:43:42 535665 best score 73
+2019-02-08 19:21:41 582079 best score 77
+2019-02-08 19:22:54 583446 total average score 1.7766666666666666
+2019-02-08 19:22:54 583446 past 100 average score 95.94
+2019-02-08 19:52:40 608040 best score 81
+2019-02-08 20:01:40 615395 best score 84
+2019-02-08 20:51:53 654719 best score 101
+2019-02-08 21:04:25 663894 total average score 2.1183636363636364
+2019-02-08 21:04:25 663894 past 100 average score 116.51
+2019-02-08 22:37:03 727669 best score 157
+2019-02-08 23:22:03 757831 total average score 2.513392857142857
+2019-02-08 23:22:03 757831 past 100 average score 140.75
+2019-02-09 01:57:49 881739 best score 232
+2019-02-09 02:00:13 884120 total average score 3.0482456140350878
+2019-02-09 02:00:13 884120 past 100 average score 173.75
+2019-02-09 04:06:36 1009548 total average score 3.5605172413793102
+2019-02-09 04:06:36 1009548 past 100 average score 206.51
+2019-02-09 06:53:49 1175349 total average score 4.240847457627119
+2019-02-09 06:53:49 1175349 past 100 average score 250.21
+2019-02-09 09:48:35 1347182 best score 437
+2019-02-09 10:10:45 1367161 total average score 5.016
+2019-02-09 10:10:45 1367161 past 100 average score 300.96
+2019-02-09 14:45:35 1631379 total average score 6.087049180327869
+2019-02-09 14:45:35 1631379 past 100 average score 371.31
+2019-02-09 18:35:03 1857672 total average score 6.958064516129032
+2019-02-09 18:35:03 1857672 past 100 average score 431.4
+Traceback (most recent call last):
+  File "/Users/sola/PycharmProjects/flappybird/model.py", line 173, in <module>
+  File "/Users/sola/PycharmProjects/flappybird/model.py", line 167, in play_bird
+  File "/Users/sola/PycharmProjects/flappybird/game.py", line 294, in action_and_reward
+    pygame.display.update()
+KeyboardInterrupt
+
+Process finished with exit code 1
