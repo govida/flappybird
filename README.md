@@ -63,7 +63,7 @@ images['pipe'] = (
 ### 2.计算撞击域
 由于我们使用的图片资源都是矩形，但实际对象是任意形状的，这时我们需要计算每个物体在图片矩形中实际的占位情况，如下图所示：
 
-![](images/hit mask.png)
+![](images/hit_mask.png)
 
 彩色区域为小鸟对象的实际占位情况即撞击域；周围灰色像素（实际为透明像素）则是非撞击域，与其他对象的撞击域重合时不会发生碰撞。只有当对象间的撞击域重合时，才会发生碰撞。后续为了判断小鸟与管道是否发生碰撞需要计算撞击域：
 
@@ -529,7 +529,7 @@ loss = self.model.train_on_batch(X, y)
 - cnn+：使用额外的reward
 - cnn：不使用额外的reward
 
-![](images/best score.png)
+![](images/best_score.png)
 
 参考：
 
