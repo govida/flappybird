@@ -128,11 +128,11 @@ class Brain:
     def extra(self, terminal, final_score):
         def format_time(t):
             return time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(t))
+
         if terminal and final_score is not None:
             if final_score > self.best_score:
                 self.best_score = final_score
                 print(format_time(time.time()), self.step, "best score", self.best_score)
-
 
 
 def play_bird(cnn_plus):
@@ -144,8 +144,7 @@ def play_bird(cnn_plus):
 
     # 3. 玩游戏
     # 3.1. 初始化状态
-    action = np.array([1, 0])
-    image_data, reward, terminal, final_score = game.action_and_reward(action)
+    image_data = game.start()
     brain.set_init_state(image_data)
 
     # 3.2 开始玩

@@ -97,8 +97,6 @@ class Game:
         self.computer_play = computer_play
         # 是否使用 启发式 reward
         self.use_extract_reward = use_extract_reward
-        # 游戏开始
-        self.start()
 
     # 随机生成一根管道
     def generate_random_pipe(self):
@@ -138,7 +136,7 @@ class Game:
             {'x': self.screen_width, 'y': init_pipe_1[1]['y']},
             {'x': self.screen_width + (self.screen_width / 2), 'y': init_pipe_2[1]['y']},
         ]
-        self.render()
+        return self.render()
 
     # 渲染
     def render(self):
@@ -176,7 +174,7 @@ class Game:
                     right_nearest_pipe = pipe
 
         min_distance = right_nearest_pipe['x'] - (self.bird_x + self.bird_width)
-        # bird 在两管道之间¬
+        # bird 在两管道之间
         if right_nearest_pipe['y'] + self.pipe_height < self.bird_y < right_nearest_pipe[
             'y'] + self.pipe_height + self.pipe_min_gap - self.bird_height:
             pos_reward = 0.5 * (1 - 1.0 * min_distance / self.screen_width / 2)
@@ -317,6 +315,7 @@ if __name__ == '__main__':
     import sys
 
     game = Game(False)
+    game.start()
     while True:
         for event in pygame.event.get():
             if event.type == QUIT or (event.type == KEYDOWN and event.key == K_ESCAPE):
